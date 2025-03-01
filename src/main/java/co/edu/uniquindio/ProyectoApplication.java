@@ -1,4 +1,4 @@
-package co.edu.uniquindio.proyecto;
+package co.edu.uniquindio;
 
 
 import org.springframework.boot.SpringApplication;
