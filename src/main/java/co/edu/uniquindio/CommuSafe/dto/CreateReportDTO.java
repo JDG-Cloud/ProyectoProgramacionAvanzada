@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import java.util.Date;
 import java.util.List;
 
-public class CreateReportDTO {
+
 
     public record CreateReportDTO(
             @NotNull @NotBlank @Length(max =50) String id,
@@ -21,4 +21,4 @@ public class CreateReportDTO {
             @NotNull @NotBlank Date dateCreated
     ) {
     }
-}
+
