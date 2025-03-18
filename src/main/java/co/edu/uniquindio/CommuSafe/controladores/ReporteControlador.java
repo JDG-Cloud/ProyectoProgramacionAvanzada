@@ -1,15 +1,17 @@
 package co.edu.uniquindio.CommuSafe.controladores;
 
+import co.edu.uniquindio.CommuSafe.dto.report.CreateReportDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-public class resporteControlador {
+@RestController
+@RequestMapping("/reportes")
+public class ReporteControlador {
     @PostMapping
-    public ResponseEntity<String> crearReporte(@RequestBody CrearReporte crearReporte){
+    public ResponseEntity<String> crearReporte(@RequestBody CreateReportDTO crearReporte){
 
     }
+
     public ResponseEntity<String> editarReporte(@RequestBody EditarReporte editarReporte){
 
     }

@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.Length;
 
 public record  UsuarioDTO(
         @NotNull @NotBlank @Length(max =100) String nombre,
-        @NotNull  @Length (max =50) String email,
+        @NotNull  @NotBlank @Length (max =50) String email,
         @NotNull  @NotBlank @Length (max =100) String ciudad,
         @NotNull  @NotBlank @Length (max =100) String direccion,
         @NotNull @NotBlank @Length (min = 7, max =15) String password,
