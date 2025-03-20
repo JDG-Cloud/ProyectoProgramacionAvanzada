@@ -26,7 +26,7 @@ public class UserServiceImplementation implements UserService {
        newUser.setPassword(createUserDTO.password());
        newUser.setCorreo(createUserDTO.email());
       // newUser.set
-       //DAtos internos de la base de deatos
+       //DAtos internos de la base de datos
        newUser.setRol(Rol.CLIENTE);
 
         userDocument.save(newUser);
