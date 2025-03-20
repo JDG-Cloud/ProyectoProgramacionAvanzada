@@ -1,4 +1,4 @@
-package co.edu.uniquindio.CommuSafe.servicios;
+package co.edu.uniquindio.CommuSafe.servicios.Interface;
 
 import co.edu.uniquindio.CommuSafe.dto.report.CreateReportDTO;
 

@@ -1,23 +1,17 @@
-package co.edu.uniquindio.CommuSafe.controladores;
+package co.edu.uniquindio.CommuSafe.servicios.Interface;
 
 import co.edu.uniquindio.CommuSafe.dto.LoginDTO;
 import co.edu.uniquindio.CommuSafe.dto.OlvidoContrasenaDTO;
 import co.edu.uniquindio.CommuSafe.dto.RestablecerContrasenaDTO;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/auth")
-public class AutenticacionControlador {
+public interface Authenticationservice {
 
     @PostMapping("/ingresar")
-    public ResponseEntity <String>iniciarSesion(@Valid  @RequestBody LoginDTO loginDTO) throws Exception{
+    public ResponseEntity<String> iniciarSesion(@Valid @RequestBody LoginDTO loginDTO) throws Exception{
         //servicio->logica de negocio
         return ResponseEntity.status(200).body("Inicio de sesión correcto");
     }
@@ -39,4 +33,5 @@ public class AutenticacionControlador {
         //servicio->logica de negocio
         return ResponseEntity.status(200).body("Nueva Contraseña registrada");
     }
+
 }

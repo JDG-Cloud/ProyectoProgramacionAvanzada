@@ -1,7 +1,7 @@
 package co.edu.uniquindio.CommuSafe.servicios.Implementation;
 
 import co.edu.uniquindio.CommuSafe.dto.report.CreateReportDTO;
-import co.edu.uniquindio.CommuSafe.servicios.ReportService;
+import co.edu.uniquindio.CommuSafe.servicios.Interface.ReportService;
 
 public class ReportServiceImplementation implements ReportService {
     @Override
@@ -10,6 +10,11 @@ public class ReportServiceImplementation implements ReportService {
 
 
 
+        return "";
+    }
+
+    @Override
+    public String deleteReport(String deleteReportId) {
         return "";
     }
 //implementea la case servicio

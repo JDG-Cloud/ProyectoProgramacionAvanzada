@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 
     public record CreateReportDTO(
-            @NotNull @NotBlank @Length(max =50) String id,
             @NotNull @NotBlank @Length(max =50)String title,
             @NotNull @NotBlank String categories,
             @NotNull @NotBlank @Length(max =100)String description,

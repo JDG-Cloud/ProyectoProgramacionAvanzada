@@ -13,4 +13,6 @@ public record CrearUsuarioDTO(
         @NotNull @NotBlank @Length (min = 7, max =15) String password,
         @NotNull  @NotBlank @Length (max =10) String telefono
 
-){}
+){
+    
+}
