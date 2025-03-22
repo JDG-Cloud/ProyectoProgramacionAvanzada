@@ -1,4 +1,4 @@
-package co.edu.uniquindio.CommuSafe.dto;
+package co.edu.uniquindio.CommuSafe.dto.report;
 
 public class LocationDTO {
     public record Location(
