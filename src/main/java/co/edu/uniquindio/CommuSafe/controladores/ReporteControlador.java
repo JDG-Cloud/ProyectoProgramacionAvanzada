@@ -36,6 +36,6 @@ public class ReporteControlador {
     @PostMapping("/{reportId}/importance")
     public ResponseEntity<String> markReportAsImportant(@PathVariable String reportId) {
         // Implementación pendiente
-        return new ResponseEntity.status(200).body("Enviada importancia");
+        return ResponseEntity.status(200).body("Enviada importancia");
     }
 }

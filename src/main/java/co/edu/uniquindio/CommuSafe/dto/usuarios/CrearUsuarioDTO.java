@@ -11,8 +11,8 @@ public record CrearUsuarioDTO(
         @NotNull  @NotBlank @Length (max =100) String ciudad,
         @NotNull  @NotBlank @Length (max =100) String direccion,
         @NotNull @NotBlank @Length (min = 7, max =15) String password,
-        @NotNull  @NotBlank @Length (max =10) String telefono
-
+        @NotNull  @NotBlank @Length (max =10) String telefono,
+        @NotNull  @NotBlank Rol rol
 ){
     
 }

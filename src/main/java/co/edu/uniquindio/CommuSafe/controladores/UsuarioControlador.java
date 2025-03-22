@@ -27,6 +27,11 @@ public class UsuarioControlador {
         usuarioServicio.editUser(editarUsuarioDTO);
     }
 
+    public ResponseEntity<String> deleteUser(@Valid @RequestBody CrearUsuarioDTO crearUsuarioDTO) throws Exception{
+        usuarioServicio.createUser(crearUsuarioDTO);
+        return ResponseEntity.status(200).body("Usuario registrado correctamente");
+    }
+@DeleteMapping("/miperfil/{id}")
     public UsuarioDTO getUser(@Valid @PathVariable String id) throws Exception{
         usuarioServicio.deleteUser(id);
 
