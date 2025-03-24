@@ -10,7 +10,7 @@ public record EditReportDTO(
         @NotNull @NotBlank @Length(max =50)String title,
         @NotNull @NotBlank String categories,
         @NotNull @NotBlank @Length(max =100)String description,
-        @NotNull @NotBlank List<String> images,
-        @NotNull @NotBlank String createdBy
+        @NotNull @NotBlank List<String> images
+
         ) {
 }

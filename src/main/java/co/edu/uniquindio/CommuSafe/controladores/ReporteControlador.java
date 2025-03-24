@@ -1,7 +1,10 @@
 package co.edu.uniquindio.CommuSafe.controladores;
 
+import co.edu.uniquindio.CommuSafe.dto.MessageDTO;
 import co.edu.uniquindio.CommuSafe.dto.report.CreateReportDTO;
 import co.edu.uniquindio.CommuSafe.dto.report.EditReportDTO;
+import co.edu.uniquindio.CommuSafe.dto.report.ReportStatusDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,22 +12,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/reportes")
 public class ReporteControlador {
     @PostMapping
-    public ResponseEntity<String> createReport(@RequestBody CreateReportDTO crearReporte)throws Exception{
-        return ResponseEntity.status(200).body("Reporte registrado correctamente");
+    public ResponseEntity<MessageDTO<String>> createReport(@Valid @RequestBody CreateReportDTO crearReporte)throws Exception{
+        return ResponseEntity.status(200).body(new MessageDTO<>(false,"Reporte registrado correctamente"));
 
     }
-    @PutMapping
-    public ResponseEntity<String> updateReport(@PathVariable String reportId ,@RequestBody EditReportDTO editarReporte)throws Exception{
-        return ResponseEntity.status(200).body("Reporte editado correctamente");
+    @PutMapping("/{reportId}")
+    public ResponseEntity<MessageDTO<String>> updateReport(@PathVariable String reportId ,@RequestBody EditReportDTO editarReporte)throws Exception{
+        return ResponseEntity.status(200).body(new MessageDTO<>(false,"Reporte actualizado correctamente"));
 
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarReporte(@PathVariable String reportId)throws Exception{
+    @DeleteMapping("/{reportId}")
+    public ResponseEntity<String> deleteReporte(@PathVariable String reportId)throws Exception{
         return ResponseEntity.status(200).body("Reporte eliminado correctamente");
 
     }
     @PutMapping("/{reportId}/status")
-    public ResponseEntity<String> updateReportStatus(@PathVariable String repotId, EditReportDTO editarReporte)throws Exception{
+    public ResponseEntity<String> updateReportStatus(@PathVariable String repotId, ReportStatusDTO editarReporte)throws Exception{
         return ResponseEntity.status(200).body("Reporte actualizado correctamente");
 
     }

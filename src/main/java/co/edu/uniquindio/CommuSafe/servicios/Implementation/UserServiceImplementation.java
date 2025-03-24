@@ -4,19 +4,18 @@ import co.edu.uniquindio.CommuSafe.dto.usuarios.CrearUsuarioDTO;
 import co.edu.uniquindio.CommuSafe.dto.usuarios.EditarUsuarioDTO;
 import co.edu.uniquindio.CommuSafe.modelo.Rol;
 import co.edu.uniquindio.CommuSafe.modelo.User;
-import co.edu.uniquindio.CommuSafe.repositorios.UsuarioDocument;
+import co.edu.uniquindio.CommuSafe.repositorios.UserRepo;
 import co.edu.uniquindio.CommuSafe.servicios.Interface.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
 public class UserServiceImplementation implements UserService {
-    public UserServiceImplementation(UsuarioDocument usuario) {
+    public UserServiceImplementation(UserRepo usuario) {
         this.userDocument = userDocument;
 
     }
-    private UsuarioDocument userDocument;
+    private UserRepo userDocument;
     @Override
     public String createUser(CrearUsuarioDTO createUserDTO) throws Exception{
 

@@ -4,10 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("usuarios")
+@Document("Usuarios")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,14 +17,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
 
     @Id
-    private String id;
+    private ObjectId id;
 
     private String nombre;
     private String ciudad;
-    private String telefonos;
-    private String direccion;
+    private String telefono;
+    @DBRef
+    private Ubication ubication;
     private String correo;
     private String password;
     private Rol rol;
     private UserStatus estadoUser;
+    private ValidationCode validationCode;
 }

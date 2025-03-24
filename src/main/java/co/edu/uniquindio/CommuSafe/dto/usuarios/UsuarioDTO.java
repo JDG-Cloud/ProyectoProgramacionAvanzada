@@ -11,6 +11,7 @@ public record  UsuarioDTO(
         @NotNull  @NotBlank @Length (max =100) String direccion,
         @NotNull @NotBlank @Length (min = 7, max =15) String password,
         @NotNull  @NotBlank @Length (max =10) String telefono,
+        @NotNull  @NotBlank UserStatus userStatus,
         @NotNull  @NotBlank Rol rol
 ) {
 }
