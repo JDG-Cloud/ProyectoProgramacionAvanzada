@@ -22,11 +22,11 @@ public class User {
     private String nombre;
     private String ciudad;
     private String telefono;
-    @DBRef
     private Ubication ubication;
     private String correo;
     private String password;
     private Rol rol;
     private UserStatus estadoUser;
     private ValidationCode validationCode;
+    private String photoUser;
 }

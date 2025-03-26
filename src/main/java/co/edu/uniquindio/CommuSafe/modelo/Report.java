@@ -30,18 +30,13 @@ public class Report {
     private String direction;
     private String email;
     private String password;
-    @DBRef
     private Rol rol;
     private UserStatus estadoUser;
-    @DBRef
     private ObjectId category;
-    @DBRef
     private ObjectId userId;
     private StatusReport statusReport;
     private List<String> photos;
-    @DBRef
     private Ubication ubication;
-    @DBRef
     private List<Comment> comments;
     private LocalDateTime registerDate;
 }
