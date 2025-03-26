@@ -14,8 +14,8 @@ import java.util.List;
             @NotNull @NotBlank LocationDTO location,
             @NotNull @NotBlank List<String> images,
             @NotNull @NotBlank StatusDTO status,
-            @NotNull @NotBlank String createdBy,
-            @NotNull @NotBlank Date dateCreated
+            @NotNull @NotBlank String createdBy
+
     ) {
     }
 

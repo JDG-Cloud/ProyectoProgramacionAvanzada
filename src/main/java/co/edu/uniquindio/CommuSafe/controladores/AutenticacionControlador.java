@@ -1,6 +1,7 @@
 package co.edu.uniquindio.CommuSafe.controladores;
 
 import co.edu.uniquindio.CommuSafe.dto.LoginDTO;
+import co.edu.uniquindio.CommuSafe.dto.MessageDTO;
 import co.edu.uniquindio.CommuSafe.dto.OlvidoContrasenaDTO;
 import co.edu.uniquindio.CommuSafe.dto.RestablecerContrasenaDTO;
 import jakarta.validation.Valid;
@@ -17,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class AutenticacionControlador {
 
     @PostMapping("/ingresar")
-    public ResponseEntity <String>iniciarSesion(@Valid  @RequestBody LoginDTO loginDTO) throws Exception{
+    public ResponseEntity <MessageDTO<String>>iniciarSesion(@Valid  @RequestBody LoginDTO loginDTO) throws Exception{
         //servicio->logica de negocio
-        return ResponseEntity.status(200).body("Inicio de sesión correcto");
+        return ResponseEntity.status(200).body(new MessageDTO<>(false, "Inicio de sesion correcto"));
     }
 
     @PostMapping("/olvidocontrasena")

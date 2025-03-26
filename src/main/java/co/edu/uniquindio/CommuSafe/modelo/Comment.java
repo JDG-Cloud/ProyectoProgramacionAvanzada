@@ -9,24 +9,21 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("Usuarios")
+import java.time.LocalDateTime;
+
+
+@Document("Comments")
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class User {
+public class Comment {
+@Id
+    private ObjectId commentId;
+// todo lo que sea ID es ObjectId
+    private ObjectId reportId;
+    private String message;
+    private LocalDateTime date;
 
-    @Id
-    private ObjectId id;
-
-    private String nombre;
-    private String ciudad;
-    private String telefono;
-    private Ubication ubication;
-    private String correo;
-    private String password;
-    private Rol rol;
-    private UserStatus estadoUser;
-    private ValidationCode validationCode;
-    private String photoUser;
+    private ObjectId userId;
 }
