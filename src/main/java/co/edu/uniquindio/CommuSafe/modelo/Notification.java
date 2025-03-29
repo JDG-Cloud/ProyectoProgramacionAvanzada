@@ -1,9 +1,6 @@
 package co.edu.uniquindio.CommuSafe.modelo;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -21,5 +18,11 @@ public class Notification {
     private ObjectId notificationId;
     private boolean read;
 
-
+    @Builder
+    public Notification(String message, LocalDateTime timestamp, ObjectId notificationId, boolean read) {
+        this.message = message;
+        this.timestamp = timestamp;
+        this.notificationId = notificationId;
+        this.read = read;
+    }
 }
