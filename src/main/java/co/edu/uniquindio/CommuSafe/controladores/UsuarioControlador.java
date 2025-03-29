@@ -38,7 +38,5 @@ public class UsuarioControlador {
         usuarioServicio.deleteUser(id);
     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "not implemented yet");
     }
-    public List<UsuarioDTO> listarTodos(){
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "not implemented yet");
-    }
+
 }

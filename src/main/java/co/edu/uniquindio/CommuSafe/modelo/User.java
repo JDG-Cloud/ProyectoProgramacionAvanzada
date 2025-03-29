@@ -9,11 +9,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("Usuarios")
 @Getter
 @Setter
-@NoArgsConstructor
+@AllArgsConstructor
 @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
     @Id
+    @EqualsAndHashCode.Include
     private ObjectId id;
 
     private String nombre;
