@@ -1,9 +1,6 @@
 package co.edu.uniquindio.CommuSafe.modelo;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -12,11 +9,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("Usuarios")
 @Getter
 @Setter
-@NoArgsConstructor
+@AllArgsConstructor
 @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
     @Id
+    @EqualsAndHashCode.Include
     private ObjectId id;
 
     private String nombre;

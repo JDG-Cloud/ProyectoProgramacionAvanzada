@@ -15,7 +15,7 @@ import java.util.List;
 @Document("Reports")
 @Getter
 @Setter
-@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Report {
