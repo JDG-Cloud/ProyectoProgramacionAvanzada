@@ -23,5 +23,11 @@ public class Notification {
     private LocalDateTime timestamp;
     private boolean read;
 
-
+    @Builder
+    public Notification(String message, LocalDateTime timestamp, ObjectId notificationId, boolean read) {
+        this.message = message;
+        this.timestamp = timestamp;
+        this.notificationId = notificationId;
+        this.read = read;
+    }
 }

@@ -1,6 +1,9 @@
 package co.edu.uniquindio.CommuSafe.modelo;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class Ubication {
-    double longitud;
-    double latitud;
+    private double latitud;
+    private double longitud;
 }

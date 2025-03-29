@@ -28,4 +28,18 @@ public class User {
     private UserStatus estadoUser;
     private ValidationCode validationCode;
     private String photoUser;
+
+    @Builder
+    public User(String nombre, String ciudad, String telefono, Ubication ubication, String correo, String password, Rol rol, UserStatus estadoUser, ValidationCode validationCode, String photoUser) {
+        this.nombre = nombre;
+        this.ciudad = ciudad;
+        this.telefono = telefono;
+        this.ubication = ubication;
+        this.correo = correo;
+        this.password = password;
+        this.rol = rol;
+        this.estadoUser = estadoUser;
+        this.validationCode = validationCode;
+        this.photoUser = photoUser;
+    }
 }
