@@ -1,27 +1,32 @@
 package co.edu.uniquindio.CommuSafe.auth.controller;
 
+import co.edu.uniquindio.CommuSafe.auth.implementation.AuthServiceInterface;
 import co.edu.uniquindio.CommuSafe.auth.dto.AuthRequest;
 import co.edu.uniquindio.CommuSafe.auth.dto.AuthResponse;
-import co.edu.uniquindio.CommuSafe.auth.model.User;
-import co.edu.uniquindio.CommuSafe.auth.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthServiceInterface _authService;
+
+    public AuthController(AuthServiceInterface authService) {
+        _authService = authService;
+    }
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest authRequest) {
-        return authService.authenticate(authRequest);
+        return _authService.authenticate(authRequest);
     }
 
-    @PostMapping("/register")
-    public String register(@RequestBody User user) {
-        authService.register(user);
-        return "user successfully registered";
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        _authService.logout(token);
+        return ResponseEntity.ok("logged out successfully");
     }
 }
