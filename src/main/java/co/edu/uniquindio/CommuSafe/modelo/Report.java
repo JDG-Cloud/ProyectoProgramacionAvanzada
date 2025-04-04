@@ -27,11 +27,6 @@ public class Report {
     private String title;
     private LocalDateTime date;
     private String description;
-    private String direction;
-    private String email;
-    private String password;
-    private Rol rol;
-    private UserStatus estadoUser;
     private ObjectId category;
     private ObjectId userId;
     private StatusReport statusReport;

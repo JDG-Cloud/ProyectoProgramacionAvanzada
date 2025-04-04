@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 public interface UserService  {
 //tiene los mismos metodos de la api
-    String createUser(CrearUsuarioDTO createUserDTO) throws Exception;
-    String editUser(EditarUsuarioDTO editUserDTO);
-    String deleteUser(String deleteUserId);
-    String getUser(String id);
+    void createUser(CrearUsuarioDTO createUserDTO) throws Exception;
+    void editUser(EditarUsuarioDTO editUserDTO);
+    void deleteUser(String deleteUserId);
+    UsuarioDTO getUser(String id);
 
 }

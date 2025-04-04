@@ -2,47 +2,41 @@ package co.edu.uniquindio.CommuSafe.servicios.Implementation;
 
 import co.edu.uniquindio.CommuSafe.dto.usuarios.CrearUsuarioDTO;
 import co.edu.uniquindio.CommuSafe.dto.usuarios.EditarUsuarioDTO;
+import co.edu.uniquindio.CommuSafe.mapper.UserMapper;
 import co.edu.uniquindio.CommuSafe.modelo.Rol;
 import co.edu.uniquindio.CommuSafe.modelo.User;
 import co.edu.uniquindio.CommuSafe.repositorios.UserRepo;
 import co.edu.uniquindio.CommuSafe.servicios.Interface.UserService;
+import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
+@RequiredArgsConstructor
 public class UserServiceImplementation implements UserService {
-    public UserServiceImplementation(UserRepo usuario) {
-        this.userDocument = userDocument;
 
-    }
-    private UserRepo userDocument;
+    private final UserMapper userMapper;
+    private final UserRepo userDocument;
+
     @Override
     public void createUser(CrearUsuarioDTO createUserDTO) throws Exception{
 
-      if (alreadyExitsEmail(createUserDTO.email()))throw new Exception("Email already exist");
+        if( alreadyExitsEmail(createUserDTO.email()) ){
+            throw new Exception("El correo "+createUserDTO.email()+" ya está en uso");
+        }
 
-      User newUser = new User();
-       newUser.setNombre(createUserDTO.nombre());
-       newUser.setPassword(createUserDTO.password());
-       newUser.setCorreo(createUserDTO.email());
-      // newUser.set
-       //DAtos internos de la base de datos
-       newUser.setRol(Rol.CLIENTE);
+        User newUser = userMapper.toDocument(createUserDTO);
 
        //Se guarda en la base de datos
         userDocument.save(newUser);
-      //envio de correo con el codigo de activacion
-
-
+       //envio de correo con el codigo de activacion
 
     }
     private boolean alreadyExitsEmail(String email) {
-        List<User> users = userDocument.findAll();
-        for (User user : users) {
-
-        }
-        return false;
+        return userDocument.findByEmail(email).isPresent();
     }
+
     private String generateCodeRandom(){
         String code = "0123456789";
         StringBuilder codeText = new StringBuilder();
@@ -54,17 +48,23 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public void editUser(String idUser,EditarUsuarioDTO editUserDTO) {
+    public void editUser(EditarUsuarioDTO editUserDTO) {
+
+        //Validamos el id
+        if (!ObjectId.isValid(EditarUsuarioDTO.id())) {
+            throw new Exception("No se encontró el usuario con el id "+EditarUsuarioDTO.id());
+        }
+
 
 
     }
 
     @Override
-    public String deleteUser(String deleteUserId) {
+    public void deleteUser(String deleteUserId) {
         return "";
     }
 
-    @Override
+
 
 
 
