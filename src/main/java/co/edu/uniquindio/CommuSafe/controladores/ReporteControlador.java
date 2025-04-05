@@ -7,7 +7,7 @@ import co.edu.uniquindio.CommuSafe.dto.report.ReportStatusDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+/**/
 @RestController
 @RequestMapping("/reportes")
 public class ReporteControlador {
