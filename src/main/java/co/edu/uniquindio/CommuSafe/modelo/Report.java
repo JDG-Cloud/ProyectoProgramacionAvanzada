@@ -27,11 +27,6 @@ public class Report {
     private String title;
     private LocalDateTime date;
     private String description;
-    private String direction;
-    private String email;
-    private String password;
-    private Rol rol;
-    private UserStatus estadoUser;
     private ObjectId category;
     private ObjectId userId;
     private StatusReport statusReport;
@@ -42,15 +37,10 @@ public class Report {
 
     @Builder
 
-    public Report(String title, LocalDateTime date, String description, String direction, String email, String password, Rol rol, UserStatus estadoUser, ObjectId category, ObjectId userId, StatusReport statusReport, List<String> photos, Ubication ubication, List<Comment> comments, LocalDateTime registerDate) {
+    public Report(String title, LocalDateTime date, String description, ObjectId category, ObjectId userId, StatusReport statusReport, List<String> photos, Ubication ubication, List<Comment> comments, LocalDateTime registerDate) {
         this.title = title;
         this.date = date;
         this.description = description;
-        this.direction = direction;
-        this.email = email;
-        this.password = password;
-        this.rol = rol;
-        this.estadoUser = estadoUser;
         this.category = category;
         this.userId = userId;
         this.statusReport = statusReport;

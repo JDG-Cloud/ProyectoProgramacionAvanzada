@@ -4,6 +4,7 @@ import co.edu.uniquindio.CommuSafe.dto.LoginDTO;
 import co.edu.uniquindio.CommuSafe.dto.MessageDTO;
 import co.edu.uniquindio.CommuSafe.dto.OlvidoContrasenaDTO;
 import co.edu.uniquindio.CommuSafe.dto.RestablecerContrasenaDTO;
+import co.edu.uniquindio.CommuSafe.dto.usuarios.NewPasswordValidationDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class AutenticacionControlador {
     }
 
     @PostMapping("/restablecercontrasenanueva")
-    public ResponseEntity <String>restablecerContrasenaNueva(@Valid  @RequestBody LoginDTO loginDTO) throws Exception{
+    public ResponseEntity <String>restablecerContrasenaNueva(@Valid  @RequestBody NewPasswordValidationDTO newPasswordDTO) throws Exception{
         //servicio->logica de negocio
         return ResponseEntity.status(200).body("Nueva Contraseña registrada");
     }

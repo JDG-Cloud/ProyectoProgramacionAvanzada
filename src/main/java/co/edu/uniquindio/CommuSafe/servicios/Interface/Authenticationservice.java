@@ -10,14 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface Authenticationservice {
 
-    @PostMapping("/ingresar")
-    public ResponseEntity<String> iniciarSesion(@Valid @RequestBody LoginDTO loginDTO);
+    public ResponseEntity<String> iniciarSesion( LoginDTO loginDTO);
 
-    @PostMapping("/olvidocontrasena")
-    public ResponseEntity <String>olvidarConrasena(@Valid  @RequestBody OlvidoContrasenaDTO olvidoContrasenaDTO);
+    public ResponseEntity <String>olvidarConrasena( OlvidoContrasenaDTO olvidoContrasenaDTO);
 
-    @PostMapping("/restablecercontrasena")
-    public ResponseEntity <String>restablecerContrasena(@Valid  @RequestBody RestablecerContrasenaDTO loginDTO);
-    @PostMapping("/restablecercontrasenanueva")
-    public ResponseEntity <String>restablecerContrasenaNueva(@Valid  @RequestBody LoginDTO loginDTO);
+    public ResponseEntity <String>restablecerContrasena( RestablecerContrasenaDTO loginDTO);
+
+    public ResponseEntity <String>restablecerContrasenaNueva( LoginDTO loginDTO);
 }
