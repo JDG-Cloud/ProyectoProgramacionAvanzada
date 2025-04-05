@@ -1,6 +1,26 @@
-POST http://localhost:8080/api/auth/
+POST http://localhost:8080/api/auth/ingresar
 Content-Type: application/json
  {
   "email": "alvaro@gmail.com",
   "password": "9876543"
  }
+### Post request to example server
+POST http://localhost:8080/api/auth/olvidocontrasena
+Content-Type: application/json
+{
+"email": "alvaro1234@gmail.com"
+}
+###
+POST  http://localhost:8080/api/auth/restablecercontrasena
+Content-Type: application/json
+{
+"code":"123456"
+}
+###
+POST  http://localhost:8080/api/auth/restablecercontrasenanueva
+Content-Type: application/json
+{
+"password":"09876543",
+"repeatPassword":"09876543"
+}
+

@@ -9,10 +9,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel ="spring")
 public interface ReportMapper {
 
+
     @Mapping(target = "Rol", constant="CLIENTE")
     @Mapping (target = "UserStatus", constant ="INACTIVO")
     @Mapping (target = "dateRegister", expression="java(java.time.LocalDateTime.now())")
-
     Report toDocument (CreateReportDTO reportDTO);
+
     
 }
