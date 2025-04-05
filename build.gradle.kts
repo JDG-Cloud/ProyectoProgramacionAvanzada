@@ -30,6 +30,7 @@ repositories {
 
 
 dependencies {
+    implementation("org.mapstruct:mapstruct:1.6.3")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
@@ -39,6 +40,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
     compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
