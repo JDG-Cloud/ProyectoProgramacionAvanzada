@@ -10,7 +10,7 @@ import java.util.List;
 public interface CategoryMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "created_At", expression = "java(java.time.LocalDate.now())")
+    @Mapping(target = "createdAt", expression = "java(java.time.LocalDate.now())")
     Category toEntity(CreateCategoryRequestDTO dto);
 
     @Mapping(source = "id", target = "id", qualifiedByName = "objectIdToString")
