@@ -1,4 +1,4 @@
-package co.edu.uniquindio.CommuSafe.modules.category.mapper;
+package co.edu.uniquindio.CommuSafe.modules.util;
 
 import org.bson.types.ObjectId;
 import org.mapstruct.Named;

@@ -1,6 +1,6 @@
 package co.edu.uniquindio.CommuSafe.modules.category.implementation;
 
-import co.edu.uniquindio.CommuSafe.modules.category.DuplicateResourceException;
+import  co.edu.uniquindio.CommuSafe.modules.category.DuplicateResourceException;
 import co.edu.uniquindio.CommuSafe.modules.category.ResourceNotFoundException;
 import co.edu.uniquindio.CommuSafe.modules.category.dto.*;
 import co.edu.uniquindio.CommuSafe.modules.category.mapper.CategoryMapper;
