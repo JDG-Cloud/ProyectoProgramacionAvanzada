@@ -8,12 +8,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDate;
 
 @Data
-@Document(collection = "categories")
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
+@Document(collection = "category")
 public class Category {
 
     @EqualsAndHashCode.Include
@@ -28,12 +28,4 @@ public class Category {
 
     @Field(name = "createdAt")
     private LocalDate createdAt;
-
-    public Category(){
-    }
-
-    public Category(String name, String icon) {
-        this.name = name;
-        this.icon = icon;
-    }
 }
