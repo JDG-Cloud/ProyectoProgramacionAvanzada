@@ -15,7 +15,7 @@ public class ObjectIdMapperUtil {
     @Named("stringToObjectId")
     public ObjectId stringToObjectId(String id) {
         if (id == null || !ObjectId.isValid(id)) {
-            throw new IllegalArgumentException("ID de categoría no válido");
+            throw new IllegalArgumentException(String.format("value '%s' not is a valid object parameter", id));
         }
         return new ObjectId(id);
     }

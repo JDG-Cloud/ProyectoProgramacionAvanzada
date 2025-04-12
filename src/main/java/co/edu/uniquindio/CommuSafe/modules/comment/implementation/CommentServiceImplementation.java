@@ -1,6 +1,6 @@
 package co.edu.uniquindio.CommuSafe.modules.comment.implementation;
 
-import co.edu.uniquindio.CommuSafe.modules.comment.CommentNotFoundException;
+import co.edu.uniquindio.CommuSafe.exceptions.CommentNotFoundException;
 import co.edu.uniquindio.CommuSafe.modules.comment.dto.*;
 import co.edu.uniquindio.CommuSafe.modules.comment.mapper.CommentMapper;
 import co.edu.uniquindio.CommuSafe.modules.comment.model.Comment;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImplementation implements CommentService {
 
     @Autowired
     private final CommentRepository commentRepository;
@@ -33,9 +33,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> getAllComments() {
-        log.info("Obteniendo todos los comentarios del sistema");
+        log.info("getting all system feedback");
         List<Comment> comments = commentRepository.findAll();
-        log.info("Se encontraron {} comentarios", comments.size());
+        log.info("{} comments found", comments.size());
         return commentRepository.findAll()
                 .stream()
                 .map(commentMapper::toDTO)
@@ -44,10 +44,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> getCommentsByReportId(String reportId) {
-        log.info("Buscando comentarios para el reporte con ID: {}", reportId);
+        log.info("seeking comments for report with ID: {}", reportId);
         ObjectId reportObjectId = new ObjectId(reportId);
         List<Comment> comments = commentRepository.findAllByReportIdOrderByDateDesc(reportObjectId);
-        log.info("Se encontraron {} comentarios para el reporte {}", comments.size(), reportId);
+        log.info("{} comments were found for the report {}", comments.size(), reportId);
         return comments
                 .stream()
                 .map(commentMapper::toDTO)
@@ -56,10 +56,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> getActiveCommentsByReportId(String reportId) {
-        log.info("Buscando comentarios activos para el reporte con ID: {}", reportId);
+        log.info("looking for active comments for report with ID: {}", reportId);
         ObjectId reportObjectId = new ObjectId(reportId);
         List<Comment> activeComments = commentRepository.findActiveCommentsByReportId(reportObjectId);
-        log.info("Se encontraron {} comentarios activos para el reporte {}", activeComments.size(), reportId);
+        log.info("{} active comments were found for the report {}", activeComments.size(), reportId);
         return activeComments
                 .stream()
                 .map(commentMapper::toDTO)
@@ -68,10 +68,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> getCommentsByUserId(String userId) {
-        log.info("Buscando comentarios realizados por el usuario con ID: {}", userId);
+        log.info("searching for comments made by user with ID: {}", userId);
         ObjectId userObjectId = new ObjectId(userId);
         List<Comment> userComments = commentRepository.findByUserId(userObjectId);
-        log.info("Se encontraron {} comentarios del usuario {}", userComments.size(), userId);
+        log.info("{} user comments found {}", userComments.size(), userId);
         return userComments
                 .stream()
                 .map(commentMapper::toDTO)
@@ -80,59 +80,51 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO getCommentById(String id) {
-        log.info("Buscando comentario con ID: {}", id);
+        log.info("searching for comment with ID: {}", id);
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("No se encontró ningún comentario con ID: {}", id);
-                    return new CommentNotFoundException("No se encontró ningún comentario con ID: " + id);
+                    log.error("no comments found with ID: {}", id);
+                    return new CommentNotFoundException("no comments found with ID: " + id);
                 });
-        log.info("Comentario encontrado: {}", comment);
+        log.info("comment found: {}", comment);
         return commentMapper.toDTO(comment);
     }
 
     @Override
     public CommentCreationResponseDTO createComment(CommentCreationRequestDTO commentDTO) {
-        log.info("Creando nuevo comentario para el reporte: {}", commentDTO.reportId());
+        log.info("creating a new comment for the report: {}", commentDTO.reportId());
         Comment comment = commentMapper.toEntity(commentDTO);
         Comment savedComment = commentRepository.save(comment);
-        log.info("Comentario creado con éxito con ID: {}", savedComment.getId());
+        log.info("comment created successfully with ID: {}", savedComment.getId());
 
         // Crear notificación para el propietario del reporte
-        CreateNotificationRequestDTO notificationDTO = new CreateNotificationRequestDTO();
-        notificationDTO.setMessage("Nuevo comentario en tu reporte");
-        notificationDTO.setType("NUEVO_COMENTARIO");
-        notificationDTO.setReportId(commentDTO.reportId());
-        notificationDTO.setReceiver(commentDTO.userId()); // En un escenario real, este debería ser el ID del propietario del reporte
+        CreateNotificationRequestDTO notificationDTO = new CreateNotificationRequestDTO("new comment on your report","NEW_COMMENT",commentDTO.reportId(),commentDTO.userId());
 
-        log.info("Enviando notificación de nuevo comentario al usuario: {}", commentDTO.userId());
+        log.info("sending new comment notification to the user: {}", commentDTO.userId());
         notificationService.createNotification(notificationDTO);
 
         return commentMapper.toCreationResponseDTO(savedComment);
     }
 
     @Override
-    public CommentModificationResponseDTO updateComment(String id, CommentModificationRequestDTO commentDTO) {
-        log.info("Actualizando comentario con ID: {}", id);
-        Comment comment = commentRepository.findById(id)
+    public CommentModificationResponseDTO updateComment(CommentModificationRequestDTO commentDTO) {
+        log.info("updating comment with ID: {}", commentDTO.id());
+        Comment comment = commentRepository.findById(commentDTO.id())
                 .orElseThrow(() -> {
-                    log.error("No se encontró ningún comentario con ID: {}", id);
-                    return new CommentNotFoundException("No se encontró ningún comentario con ID: " + id);
+                    log.error("no comments found with ID: {}", commentDTO.id());
+                    return new CommentNotFoundException("no comments found with ID: " + commentDTO.id());
                 });
 
         comment.setMessage(commentDTO.message());
         comment.setScore(commentDTO.score());
 
         Comment updatedComment = commentRepository.save(comment);
-        log.info("Comentario actualizado con éxito: {}", updatedComment);
+        log.info("comment updated successfully: {}", updatedComment);
 
         // Crear notificación para la actualización
-        CreateNotificationRequestDTO notificationDTO = new CreateNotificationRequestDTO();
-        notificationDTO.setMessage("Un comentario en tu reporte ha sido actualizado");
-        notificationDTO.setType("COMENTARIO_ACTUALIZADO");
-        notificationDTO.setReportId(commentDTO.reportId());
-        notificationDTO.setReceiver(commentDTO.userId()); // En un escenario real, este debería ser el ID del propietario del reporte
+        CreateNotificationRequestDTO notificationDTO = new CreateNotificationRequestDTO("a comment on your report has been updated.","UPDATED_COMMENT",commentDTO.reportId(),commentDTO.userId());
 
-        log.info("Enviando notificación de actualización de comentario al usuario: {}", commentDTO.userId());
+        log.info("sending comment update notification to the user: {}", commentDTO.userId());
         notificationService.createNotification(notificationDTO);
 
         return commentMapper.toModificationResponseDTO(updatedComment);
@@ -140,58 +132,54 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO softDeleteComment(String id) {
-        log.info("Realizando eliminación suave del comentario con ID: {}", id);
+        log.info("performing soft deletion of comment with ID: {}", id);
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("No se encontró ningún comentario con ID: {}", id);
-                    return new CommentNotFoundException("No se encontró ningún comentario con ID: " + id);
+                    log.error("no comments found with ID: {}", id);
+                    return new CommentNotFoundException("no comments found with ID: " + id);
                 });
 
         comment.setDeleted(true);
         Comment deletedComment = commentRepository.save(comment);
-        log.info("Comentario marcado como eliminado con éxito: {}", deletedComment);
+        log.info("comment marked as successfully deleted: {}", deletedComment);
 
         return commentMapper.toDTO(deletedComment);
     }
 
     @Override
     public void deleteComment(String id) {
-        log.info("Eliminando permanentemente el comentario con ID: {}", id);
+        log.info("permanently deleting comment with ID: {}", id);
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("No se encontró ningún comentario con ID: {}", id);
-                    return new CommentNotFoundException("No se encontró ningún comentario con ID: " + id);
+                    log.error("no comments found with ID: {}", id);
+                    return new CommentNotFoundException("no comments found with ID: " + id);
                 });
 
         commentRepository.deleteById(id);
-        log.info("Comentario eliminado permanentemente con éxito");
+        log.info("comment permanently deleted successfully");
 
         // Opcional: Crear notificación para la eliminación
-        CreateNotificationRequestDTO notificationDTO = new CreateNotificationRequestDTO();
-        notificationDTO.setMessage("Un comentario en tu reporte ha sido eliminado");
-        notificationDTO.setType("COMENTARIO_ELIMINADO");
-        notificationDTO.setReportId(comment.getReportId().toString());
-        notificationDTO.setReceiver(comment.getUserId().toString());
+        CreateNotificationRequestDTO notificationDTO = new CreateNotificationRequestDTO("a comment on your report has been deleted","COMMENT_DELETED",comment.getReportId().toString(),comment.getUserId().toString());
 
-        log.info("Enviando notificación de eliminación de comentario al usuario: {}", comment.getUserId());
+        log.info("sending comment deletion notification to the user: {}", comment.getUserId());
         notificationService.createNotification(notificationDTO);
     }
 
     @Override
     public long countCommentsByReportId(String reportId) {
-        log.info("Contando todos los comentarios para el reporte con ID: {}", reportId);
+        log.info("counting all comments for the report with ID: {}", reportId);
         ObjectId reportObjectId = new ObjectId(reportId);
         long count = commentRepository.countByReportId(reportObjectId);
-        log.info("Total de comentarios para el reporte {}: {}", reportId, count);
+        log.info("total comments for the report {}: {}", reportId, count);
         return count;
     }
 
     @Override
     public long countActiveCommentsByReportId(String reportId) {
-        log.info("Contando comentarios activos para el reporte con ID: {}", reportId);
+        log.info("counting active comments for report with ID: {}", reportId);
         ObjectId reportObjectId = new ObjectId(reportId);
         long activeCount = commentRepository.countByReportIdAndDeleted(reportObjectId, false);
-        log.info("Total de comentarios activos para el reporte {}: {}", reportId, activeCount);
+        log.info("total active comments for the report {}: {}", reportId, activeCount);
         return activeCount;
     }
 }

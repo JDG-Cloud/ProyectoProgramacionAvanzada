@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 
 public record CommentCreationRequestDTO(
 
-        @NotBlank  String  messagge,
+        @NotBlank  String  message,
         @NotBlank  String  userId,
         @NotBlank  String  reportId,
         @NotBlank  String  createdBy,
-        @NotBlank  int  score
+        int  score
 ) {}

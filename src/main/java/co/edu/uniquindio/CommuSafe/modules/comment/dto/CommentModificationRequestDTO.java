@@ -8,5 +8,5 @@ public record CommentModificationRequestDTO(
         @NotBlank  String  reportId,
         @NotBlank  String  userId,
         @NotBlank  String  createdBy,
-        @NotBlank  int  score
+        int  score
 ){}

@@ -19,30 +19,11 @@ public class NotificationController {
     private NotificationService notificationService;
 
     /**
-     * Get all notifications
-     */
-    @GetMapping
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<MessageAlertDTO<List<NotificationDTO>>> getAllNotifications() {
-        List<NotificationDTO> notifications = notificationService.getAllNotifications();
-        return ResponseEntity.ok(new MessageAlertDTO<>(false, notifications));
-    }
-
-    /**
      * Get notifications by user ID
      */
     @GetMapping("{userId}")
     public ResponseEntity<MessageAlertDTO<List<NotificationDTO>>> getNotificationsByUserId(@PathVariable String userId) {
         List<NotificationDTO> notifications = notificationService.getNotificationsByUserId(userId);
-        return ResponseEntity.ok(new MessageAlertDTO<>(false, notifications));
-    }
-
-    /**
-     * Get unread notifications by user ID
-     */
-    @GetMapping("unread/{userId}")
-    public ResponseEntity<MessageAlertDTO<List<NotificationDTO>>> getUnreadNotificationsByUserId(@PathVariable String userId) {
-        List<NotificationDTO> notifications = notificationService.getUnreadNotificationsByUserId(userId);
         return ResponseEntity.ok(new MessageAlertDTO<>(false, notifications));
     }
 
@@ -61,7 +42,7 @@ public class NotificationController {
     @PostMapping
     public ResponseEntity<MessageAlertDTO<String>> createNotification(@Valid @RequestBody CreateNotificationRequestDTO notificationDTO) {
         notificationService.createNotification(notificationDTO);
-        return ResponseEntity.ok(new MessageAlertDTO<>(false, "Notificación creada exitosamente"));
+        return ResponseEntity.ok(new MessageAlertDTO<>(false, "notification created successfully"));
     }
 
     /**
@@ -71,16 +52,7 @@ public class NotificationController {
     public ResponseEntity<MessageAlertDTO<String>> updateNotification(@PathVariable String id,
                                                                       @Valid @RequestBody UpdateNotificationDTO notificationDTO) {
         notificationService.updateNotification(id, notificationDTO);
-        return ResponseEntity.ok(new MessageAlertDTO<>(false, "Notificación actualizada correctamente"));
-    }
-
-    /**
-     * Mark notification as read
-     */
-    @PutMapping("/{id}/read")
-    public ResponseEntity<MessageAlertDTO<String>> markAsRead(@PathVariable String id) {
-        notificationService.markAsRead(id);
-        return ResponseEntity.ok(new MessageAlertDTO<>(false, "Notificación marcada como leída"));
+        return ResponseEntity.ok(new MessageAlertDTO<>(false, "notification updated successfully"));
     }
 
     /**
@@ -89,6 +61,6 @@ public class NotificationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageAlertDTO<String>> deleteNotification(@PathVariable String id) {
         notificationService.deleteNotification(id);
-        return ResponseEntity.ok(new MessageAlertDTO<>(false, "Notificación eliminada exitosamente"));
+        return ResponseEntity.ok(new MessageAlertDTO<>(false, "notification successfully removed"));
     }
 }
