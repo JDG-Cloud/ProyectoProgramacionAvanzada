@@ -20,5 +20,5 @@ public interface NotificationRepository extends MongoRepository<Notification, St
     @Query("{ 'receptor' : ?0 }")
     List<Notification> findAllByReceiverOrderByDateDesc(ObjectId receiver);
 
-    long countByReceiverAndRead(ObjectId receiver, boolean read);x
+    long countByReceiverAndRead(ObjectId receiver, boolean read);
 }

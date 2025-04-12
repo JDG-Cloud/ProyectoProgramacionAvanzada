@@ -2,6 +2,7 @@ package co.edu.uniquindio.CommuSafe.modules.category.controller;
 
 import co.edu.uniquindio.CommuSafe.modules.category.dto.*;
 import co.edu.uniquindio.CommuSafe.modules.category.service.CategoryService;
+import co.edu.uniquindio.CommuSafe.modules.util.MessageAlertDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/category")
-@CrossOrigin(origins = "http://localhost:4200")
 public class CategoryController {
 
     @Autowired
@@ -22,25 +22,27 @@ public class CategoryController {
      * Obtener todas las categorías
      */
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-        return ResponseEntity.ok(categoryService.getAllCategories());
+    public ResponseEntity<MessageAlertDTO<List<CategoryDTO>>> getAllCategories() {
+        List<CategoryDTO> categories = categoryService.getAllCategories();
+        return ResponseEntity.ok(new MessageAlertDTO<>(false, categories));
     }
 
     /**
      * Obtener categorías para dropdown (solo nombre + id)
      */
     @GetMapping("/dropdown")
-    public ResponseEntity<List<CategoryDTO>> getCategoriesForDropdown(@RequestParam(defaultValue = "false") boolean forDropdown) {
-        // Cambiado el nombre del método a uno unificado
-        return ResponseEntity.ok(categoryService.getCategories(forDropdown));
+    public ResponseEntity<MessageAlertDTO<List<CategoryDTO>>> getCategoriesForDropdown(@RequestParam(defaultValue = "false") boolean forDropdown) {
+        List<CategoryDTO> categories = categoryService.getCategories(forDropdown);
+        return ResponseEntity.ok(new MessageAlertDTO<>(false, categories));
     }
 
     /**
      * Obtener categoría por ID
      */
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable String id) {
-        return ResponseEntity.ok(categoryService.getCategoryById(id));
+    public ResponseEntity<MessageAlertDTO<CategoryDTO>> getCategoryById(@PathVariable String id) {
+        CategoryDTO category = categoryService.getCategoryById(id);
+        return ResponseEntity.ok(new MessageAlertDTO<>(false, category));
     }
 
     /**
@@ -48,8 +50,9 @@ public class CategoryController {
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<CreateCategoryResponseDTO> createCategory(@Valid @RequestBody CreateCategoryRequestDTO categoryDTO) {
-        return ResponseEntity.ok(categoryService.createCategory(categoryDTO));
+    public ResponseEntity<MessageAlertDTO<String>> createCategory(@Valid @RequestBody CreateCategoryRequestDTO categoryDTO) {
+        CreateCategoryResponseDTO response = categoryService.createCategory(categoryDTO);
+        return ResponseEntity.ok(new MessageAlertDTO<>(false, "Categoría creada exitosamente"));
     }
 
     /**
@@ -57,9 +60,10 @@ public class CategoryController {
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable String id,
-                                                      @Valid @RequestBody UpdateCategoryDTO categoryDTO) {
-        return ResponseEntity.ok(categoryService.updateCategory(id, categoryDTO));
+    public ResponseEntity<MessageAlertDTO<String>> updateCategory(@PathVariable String id,
+                                                                  @Valid @RequestBody UpdateCategoryDTO categoryDTO) {
+        categoryService.updateCategory(id, categoryDTO);
+        return ResponseEntity.ok(new MessageAlertDTO<>(false, "Categoría actualizada correctamente"));
     }
 
     /**
@@ -67,8 +71,8 @@ public class CategoryController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<Void> deleteCategory(@PathVariable String id) {
+    public ResponseEntity<MessageAlertDTO<String>> deleteCategory(@PathVariable String id) {
         categoryService.deleteCategory(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new MessageAlertDTO<>(false, "La categoría ha sido eliminada exitosamente"));
     }
 }

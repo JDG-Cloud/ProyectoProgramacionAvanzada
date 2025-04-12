@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Document(collection = "categories")
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 

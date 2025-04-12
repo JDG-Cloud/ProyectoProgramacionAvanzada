@@ -8,10 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
 @Data
-@Document (collection = "notifications")
+@Document (collection = "notification")
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Notification {

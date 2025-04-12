@@ -1,14 +1,8 @@
 package co.edu.uniquindio.CommuSafe.modules.category.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-public class CreateCategoryResponseDTO {
-
-    private String id;  // El ID generado por MongoDB
-    private String name;
-    private String icon;
-    private String description;
-}
+public record CreateCategoryResponseDTO(
+        String id,  // El ID generado por MongoDB
+        String name,
+        String icon,
+        String description
+) {}

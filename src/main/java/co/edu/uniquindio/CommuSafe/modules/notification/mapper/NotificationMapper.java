@@ -16,16 +16,16 @@ public interface NotificationMapper {
     @Mapping(source = "receiver", target = "receiver", qualifiedByName = "stringToObjectId")
     Notification toEntity(CreateNotificationRequestDTO dto);
 
-    @Mapping(source = "id", target = "id", qualifiedByName = "objectIdToString")
-    @Mapping(source = "reportId", target = "reportId", qualifiedByName = "objectIdToString")
-    @Mapping(source = "receiver", target = "receiver", qualifiedByName = "objectIdToString")
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "reportId", target = "reportId")
+    @Mapping(source = "receiver", target = "receiver")
     CreateNotificationResponseDTO toResponseDTO(Notification notification);
 
     List<CreateNotificationResponseDTO> toListResponseDTO(List<Notification> list);
 
-    @Mapping(source = "id", target = "id", qualifiedByName = "objectIdToString")
-    @Mapping(source = "reportId", target = "reportId", qualifiedByName = "objectIdToString")
-    @Mapping(source = "receiver", target = "receiver", qualifiedByName = "objectIdToString")
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "reportId", target = "reportId")
+    @Mapping(source = "receiver", target = "receiver")
     NotificationDTO toDTO(Notification notification);
 
     List<NotificationDTO> toDTOList(List<Notification> notifications);

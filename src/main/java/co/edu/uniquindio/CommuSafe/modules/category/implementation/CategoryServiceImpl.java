@@ -1,14 +1,13 @@
 package co.edu.uniquindio.CommuSafe.modules.category.implementation;
 
-import  co.edu.uniquindio.CommuSafe.modules.category.DuplicateResourceException;
-import co.edu.uniquindio.CommuSafe.modules.category.ResourceNotFoundException;
+import co.edu.uniquindio.CommuSafe.exceptions.CustomException;
 import co.edu.uniquindio.CommuSafe.modules.category.dto.*;
 import co.edu.uniquindio.CommuSafe.modules.category.mapper.CategoryMapper;
 import co.edu.uniquindio.CommuSafe.modules.category.model.Category;
 import co.edu.uniquindio.CommuSafe.modules.category.repository.CategoryRepository;
 import co.edu.uniquindio.CommuSafe.modules.category.service.CategoryService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
@@ -24,6 +22,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private final CategoryMapper categoryMapper;
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
+        this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
+    }
 
     @Override
     public List<CategoryDTO> getAllCategories() {
@@ -41,25 +44,32 @@ public class CategoryServiceImpl implements CategoryService {
                     .map(categoryMapper::toDTO)
                     .collect(Collectors.toList());
         } else {
-            return getAllCategories();  // Llama a getAllCategories si no es para dropdown
+            return getAllCategories();
         }
     }
 
     @Override
     public CategoryDTO getCategoryById(String id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con id: " + id));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Categoría no encontrada con id: " + id));
+        return categoryMapper.toDTO(category);
+    }
+
+    @Override
+    public CategoryDTO getCategoryByName(String name) {
+        Category category = categoryRepository.findByName(name)
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Categoría no encontrada con nombre: " + name));
         return categoryMapper.toDTO(category);
     }
 
     @Override
     public CreateCategoryResponseDTO createCategory(CreateCategoryRequestDTO categoryDTO) {
-        if (categoryRepository.existsByName(categoryDTO.getName())) { // Uso de getName() en lugar de name()
-            throw new DuplicateResourceException("Ya existe una categoría con el nombre: " + categoryDTO.getName());
+        if (categoryRepository.existsByName(categoryDTO.name())) {
+            throw new CustomException(HttpStatus.CONFLICT, "Ya existe una categoría con el nombre: " + categoryDTO.name());
         }
 
         Category category = categoryMapper.toEntity(categoryDTO);
-        category.setCreatedAt(LocalDate.now()); // Corrección del setter
+        category.setCreatedAt(LocalDate.now());
         Category savedCategory = categoryRepository.save(category);
 
         return categoryMapper.toResponseDTO(savedCategory);
@@ -68,16 +78,16 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO updateCategory(String id, UpdateCategoryDTO categoryDTO) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con id: " + id));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Categoría no encontrada con id: " + id));
 
-        if (!category.getName().equals(categoryDTO.name()) && // Uso de getName()
+        if (!category.getName().equals(categoryDTO.name()) &&
                 categoryRepository.existsByName(categoryDTO.name())) {
-            throw new DuplicateResourceException("Ya existe una categoría con el nombre: " + categoryDTO.name());
+            throw new CustomException(HttpStatus.CONFLICT, "Ya existe una categoría con el nombre: " + categoryDTO.name());
         }
 
-        category.setName(categoryDTO.name());  // Uso de getName()
-        category.setIcon(categoryDTO.icon());  // Uso de getIcon()
-        category.setDescription(categoryDTO.description());  // Uso de getDescription()
+        category.setName(categoryDTO.name());
+        category.setIcon(categoryDTO.icon());
+        category.setDescription(categoryDTO.description());
 
         return categoryMapper.toDTO(categoryRepository.save(category));
     }
@@ -85,7 +95,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(String id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con id: " + id));
-        categoryRepository.deleteById(id);  // Cambio: Se usa 'deleteById' en lugar de eliminar por nombre
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Categoría no encontrada con id: " + id));
+        categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteCategoryByName(String name) {
+        Category category = categoryRepository.findByName(name)
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Categoría no encontrada con nombre: " + name));
+        categoryRepository.deleteCategoryByName(name);
     }
 }
