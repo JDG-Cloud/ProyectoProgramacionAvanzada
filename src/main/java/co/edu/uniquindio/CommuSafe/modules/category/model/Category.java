@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @Data
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 

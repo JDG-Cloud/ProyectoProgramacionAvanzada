@@ -34,4 +34,6 @@ public interface CategoryService {
      * Elimina una categoría por su ID.
      */
     void deleteCategory(String id);
+    CategoryDTO getCategoryByName(String name);
+    void deleteCategoryByName(String name);
 }

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.CommuSafe.modules.category.mapper;
 
+import co.edu.uniquindio.CommuSafe.modules.util.ObjectIdMapperUtil;
 import co.edu.uniquindio.CommuSafe.modules.category.dto.*;
 import co.edu.uniquindio.CommuSafe.modules.category.model.Category;
 import org.mapstruct.*;
