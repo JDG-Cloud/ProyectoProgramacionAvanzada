@@ -1,4 +1,4 @@
-package co.edu.uniquindio.CommuSafe.modules.comment;
+package co.edu.uniquindio.CommuSafe.exceptions;
 
 public class CommentNotFoundException extends RuntimeException {
     public CommentNotFoundException(String message) {

@@ -25,4 +25,5 @@ public interface CommentRepository extends MongoRepository<Comment, String>{
 
     long countByReportIdAndDeleted(ObjectId reportId, boolean deleted);
 
+    List<Comment> findActiveCommentsByReportId(ObjectId reportObjectId);
 }

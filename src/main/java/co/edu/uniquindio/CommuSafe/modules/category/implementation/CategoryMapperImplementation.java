@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class CategoryMapperImplementation implements CategoryService {
 
     @Autowired
     private final CategoryRepository categoryRepository;
@@ -23,7 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private final CategoryMapper categoryMapper;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
+    public CategoryMapperImplementation(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
     }

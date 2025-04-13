@@ -1,6 +1,6 @@
 package co.edu.uniquindio.CommuSafe.modules.security.controller;
 
-import co.edu.uniquindio.CommuSafe.modules.security.implementation.SecurityServiceInterface;
+import co.edu.uniquindio.CommuSafe.modules.security.implementation.SecurityServiceImpl;
 import co.edu.uniquindio.CommuSafe.modules.security.dto.AuthRequest;
 import co.edu.uniquindio.CommuSafe.modules.security.dto.AuthResponse;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/security")
 public class SecurityController {
 
-    private final SecurityServiceInterface _authService;
+    private final SecurityServiceImpl _authService;
 
-    public SecurityController(SecurityServiceInterface authService) {
+    public SecurityController(SecurityServiceImpl authService) {
         _authService = authService;
     }
 

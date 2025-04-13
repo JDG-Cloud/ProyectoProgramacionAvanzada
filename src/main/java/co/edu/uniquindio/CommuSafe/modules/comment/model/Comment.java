@@ -6,39 +6,19 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
-@Document(collection = "comments")
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Document(collection = "comment")
 public class Comment {
-
-    @EqualsAndHashCode.Include
     @Id
-    private ObjectId commentId;
+    private ObjectId id;
 
     private String message;
-    private LocalDate date;
+    private LocalDateTime date;
     private ObjectId userId;
     private ObjectId reportId;
     private String createdBy;
     private int score;
     private boolean deleted;
-
-    public Comment (){
-    }
-
-    public Comment(String message, ObjectId userId, ObjectId reportId, String createdBy, int score) {
-        this.message = message;
-        this.userId = userId;
-        this.reportId = reportId;
-        this.createdBy = createdBy;
-        this.score = score;
-        this.date = LocalDate.now();
-        this.deleted = false;
-    }
 }

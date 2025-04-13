@@ -2,10 +2,11 @@ package co.edu.uniquindio.CommuSafe.modules.comment.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.bson.types.ObjectId;
+
 import java.time.LocalDateTime;
 
 public record CommentCreationResponseDTO(
-        @NotBlank @NotNull String id,
         @NotBlank String message,
         LocalDateTime date,
         @NotBlank String userId,
