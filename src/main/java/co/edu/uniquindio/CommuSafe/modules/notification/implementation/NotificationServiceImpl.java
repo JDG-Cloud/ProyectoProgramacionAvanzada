@@ -35,7 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public List<NotificationDTO> getNotificationsByUserId(String userId) {
         if (!ObjectId.isValid(userId)) {
-            throw new RuntimeException("ID de usuario inválido: " + userId);
+            throw new RuntimeException("Invalid user ID: " + userId);
         }
 
         ObjectId userObjectId = new ObjectId(userId);
@@ -49,7 +49,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public List<NotificationDTO> getUnreadNotificationsByUserId(String userId) {
         if (!ObjectId.isValid(userId)) {
-            throw new RuntimeException("ID de usuario inválido: " + userId);
+            throw new RuntimeException("Invalid user ID: " + userId);
         }
 
         ObjectId userObjectId = new ObjectId(userId);
@@ -63,12 +63,12 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public NotificationDTO getNotificationById(String id) {
         if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID de notificación inválido: " + id);
+            throw new RuntimeException("Invalid notification ID: " + id);
         }
 
         Optional<Notification> notificationOptional = notificationRepository.findById(id);
         if (notificationOptional.isEmpty()) {
-            throw new RuntimeException("No se encontró la notificación con el id " + id);
+            throw new RuntimeException("The notification with the id was not found" + id);
         }
 
         return notificationMapper.toDTO(notificationOptional.get());
@@ -77,7 +77,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public CreateNotificationResponseDTO createNotification(CreateNotificationRequestDTO notificationDTO) {
         if (!ObjectId.isValid(notificationDTO.receiver())) {
-            throw new RuntimeException("ID de destinatario inválido: " + notificationDTO.receiver());
+            throw new RuntimeException("Invalid recipient ID: " + notificationDTO.receiver());
         }
 
         try {
@@ -94,19 +94,19 @@ public class NotificationServiceImpl implements NotificationService {
                     savedNotification.getReceiver().toString()
             );
         } catch (Exception e) {
-            throw new RuntimeException("Error al crear la notificación: " + e.getMessage());
+            throw new RuntimeException("Error creating notification: " + e.getMessage());
         }
     }
 
     @Override
     public NotificationDTO updateNotification(String id, UpdateNotificationDTO notificationDTO) {
         if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID de notificación inválido: " + id);
+            throw new RuntimeException("Invalid notification ID: " + id);
         }
 
         Optional<Notification> notificationOptional = notificationRepository.findById(id);
         if (notificationOptional.isEmpty()) {
-            throw new RuntimeException("No se encontró la notificación con el id " + id);
+            throw new RuntimeException("The notification with the id was not found " + id);
         }
 
         Notification notification = notificationOptional.get();
@@ -121,12 +121,12 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public NotificationDTO markAsRead(String id) {
         if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID de notificación inválido: " + id);
+            throw new RuntimeException("Invalid notification ID: " + id);
         }
 
         Optional<Notification> notificationOptional = notificationRepository.findById(id);
         if (notificationOptional.isEmpty()) {
-            throw new RuntimeException("No se encontró la notificación con el id " + id);
+            throw new RuntimeException("The notification with the id was not found " + id);
         }
 
         Notification notification = notificationOptional.get();
@@ -139,12 +139,12 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void deleteNotification(String id) {
         if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID de notificación inválido: " + id);
+            throw new RuntimeException("Invalid notification ID: " + id);
         }
 
         Optional<Notification> notificationOptional = notificationRepository.findById(id);
         if (notificationOptional.isEmpty()) {
-            throw new RuntimeException("No se encontró la notificación con el id " + id);
+            throw new RuntimeException("The notification with the id was not found" + id);
         }
 
         notificationRepository.deleteById(id);
@@ -153,7 +153,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public long countUnreadNotifications(String userId) {
         if (!ObjectId.isValid(userId)) {
-            throw new RuntimeException("ID de usuario inválido: " + userId);
+            throw new RuntimeException("Invalid user ID: " + userId);
         }
 
         ObjectId userObjectId = new ObjectId(userId);

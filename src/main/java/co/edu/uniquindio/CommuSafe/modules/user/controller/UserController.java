@@ -4,29 +4,26 @@ import co.edu.uniquindio.CommuSafe.modules.user.dto.UserCreationRequest;
 import co.edu.uniquindio.CommuSafe.modules.user.dto.UserCreationResponse;
 import co.edu.uniquindio.CommuSafe.modules.user.dto.UserModificationRequest;
 import co.edu.uniquindio.CommuSafe.modules.user.dto.UserModificationResponse;
-import co.edu.uniquindio.CommuSafe.modules.user.implementation.UserServiceInterface;
+import co.edu.uniquindio.CommuSafe.modules.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
-    private final UserServiceInterface _userService;
-
-    public UserController(UserServiceInterface userService) {
-        _userService = userService;
-    }
+    @Autowired
+    private UserService userService;
 
     @PostMapping("create")
     public ResponseEntity<UserCreationResponse> create(@RequestBody UserCreationRequest userCreationRequest) {
-        var userCreationResponse = _userService.create(userCreationRequest);
+        var userCreationResponse = userService.create(userCreationRequest);
         return ResponseEntity.ok(userCreationResponse);
     }
 
     @PutMapping("update")
     public ResponseEntity<UserModificationResponse> update(@RequestBody UserModificationRequest userModificationRequest) {
-        var userModificationResponse = _userService.update(userModificationRequest);
+        var userModificationResponse = userService.update(userModificationRequest);
         return ResponseEntity.ok(userModificationResponse);
     }
 }
