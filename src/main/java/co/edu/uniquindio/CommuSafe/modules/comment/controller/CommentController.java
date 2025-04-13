@@ -1,9 +1,13 @@
 package co.edu.uniquindio.CommuSafe.modules.comment.controller;
 
+import co.edu.uniquindio.CommuSafe.modules.category.ResourceNotFoundException;
 import co.edu.uniquindio.CommuSafe.modules.comment.dto.*;
 import co.edu.uniquindio.CommuSafe.modules.comment.service.CommentService;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,110 +32,177 @@ public class CommentController {
 
     /**
      * Obtiene comentarios por ID de reporte
-     * Utiliza el patrón de ruta anidada del fragmento
      */
-    @GetMapping("/api/reports/{reportId}/comments")
-    public ResponseEntity<List<CommentDTO>> getCommentsByReportId(@PathVariable String reportId) {
+    @GetMapping("/reports/{reportId}/comments")
+    public ResponseEntity<List<CommentDTO>> getCommentsByReportId(
+            @PathVariable @NotBlank(message = "El ID del reporte no puede estar vacío") String reportId) {
+        validateReportExists(reportId);
         return ResponseEntity.ok(commentService.getCommentsByReportId(reportId));
     }
 
     /**
      * Obtiene comentarios activos por ID de reporte
      */
-    @GetMapping("/api/reports/{reportId}/comments/active")
-    public ResponseEntity<List<CommentDTO>> getActiveCommentsByReportId(@PathVariable String reportId) {
+    @GetMapping("/reports/{reportId}/comments/active")
+    public ResponseEntity<List<CommentDTO>> getActiveCommentsByReportId(
+            @PathVariable @NotBlank(message = "El ID del reporte no puede estar vacío") String reportId) {
+        validateReportExists(reportId);
         return ResponseEntity.ok(commentService.getActiveCommentsByReportId(reportId));
     }
 
     /**
      * Crea un nuevo comentario para un reporte
-     * Utiliza el patrón de ruta anidada del fragmento
      */
-    @PostMapping("/api/reports/{reportId}/comments")
+    @PostMapping("/reports/{reportId}/comments")
     public ResponseEntity<CommentCreationResponseDTO> createComment(
-            @PathVariable String reportId,
+            @PathVariable @NotBlank(message = "El ID del reporte no puede estar vacío") String reportId,
             @Valid @RequestBody CommentCreationRequestDTO commentDTO) {
-        // Asegura que el ID del reporte en la ruta coincida con el del cuerpo de la solicitud
+        // Validar que el reporte existe
+        validateReportExists(reportId);
+
+        // Validar concordancia entre path y body
         if (!reportId.equals(commentDTO.reportId())) {
-            throw new IllegalArgumentException("El ID del reporte en la ruta debe coincidir con el ID del reporte en el cuerpo de la solicitud");
+            throw new ValidationException("El ID del reporte en la ruta debe coincidir con el ID del reporte en el cuerpo");
         }
-        return ResponseEntity.ok(commentService.createComment(commentDTO));
+
+        // Validar que el usuario tiene permisos para comentar en este reporte
+        validateUserCanCommentOnReport(commentDTO.userId(), reportId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(commentDTO));
     }
 
     /**
-     * Método alternativo utilizando el patrón de nomenclatura explícito del fragmento
+     * Método alternativo para crear comentarios
      */
-    @PostMapping("/api/comment/createComment")
+    @PostMapping("/comment/createComment")
     public ResponseEntity<CommentCreationResponseDTO> addComment(
             @Valid @RequestBody CommentCreationRequestDTO commentDTO) {
-        return ResponseEntity.ok(commentService.createComment(commentDTO));
+        // Validar que el reporte existe
+        validateReportExists(commentDTO.reportId());
+
+        // Validar que el usuario tiene permisos para comentar en este reporte
+        validateUserCanCommentOnReport(commentDTO.userId(), commentDTO.reportId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(commentDTO));
     }
 
     /**
      * Obtiene comentarios por ID de usuario
      */
-    @GetMapping("/api/users/{userId}/comments")
-    public ResponseEntity<List<CommentDTO>> getCommentsByUserId(@PathVariable String userId) {
+    @GetMapping("/users/{userId}/comments")
+    public ResponseEntity<List<CommentDTO>> getCommentsByUserId(
+            @PathVariable @NotBlank(message = "El ID del usuario no puede estar vacío") String userId) {
+        validateUserExists(userId);
         return ResponseEntity.ok(commentService.getCommentsByUserId(userId));
     }
 
     /**
      * Cuenta los comentarios por ID de reporte
      */
-    @GetMapping("/api/reports/{reportId}/comments/count")
-    public ResponseEntity<Long> countCommentsByReportId(@PathVariable String reportId) {
+    @GetMapping("/reports/{reportId}/comments/count")
+    public ResponseEntity<Long> countCommentsByReportId(
+            @PathVariable @NotBlank(message = "El ID del reporte no puede estar vacío") String reportId) {
+        validateReportExists(reportId);
         return ResponseEntity.ok(commentService.countCommentsByReportId(reportId));
     }
 
     /**
      * Cuenta los comentarios activos por ID de reporte
      */
-    @GetMapping("/api/reports/{reportId}/comments/count-active")
-    public ResponseEntity<Long> countActiveCommentsByReportId(@PathVariable String reportId) {
+    @GetMapping("/reports/{reportId}/comments/count-active")
+    public ResponseEntity<Long> countActiveCommentsByReportId(
+            @PathVariable @NotBlank(message = "El ID del reporte no puede estar vacío") String reportId) {
+        validateReportExists(reportId);
         return ResponseEntity.ok(commentService.countActiveCommentsByReportId(reportId));
     }
 
     /**
-     * Obtiene un comentario por su ID
-     * Soporta el patrón del fragmento
+     * Obtiene un comentario por su ID (ruta explícita)
      */
-    @GetMapping("/api/comment/getComment/{id}")
-    public ResponseEntity<CommentDTO> getComment(@PathVariable String id) {
+    @GetMapping("/comment/getComment/{id}")
+    public ResponseEntity<CommentDTO> getComment(
+            @PathVariable @NotBlank(message = "El ID del comentario no puede estar vacío") String id) {
         return ResponseEntity.ok(commentService.getCommentById(id));
     }
 
     /**
-     * También soporta una ruta más RESTful para obtener un comentario por ID
+     * Obtiene un comentario por su ID (ruta RESTful)
      */
-    @GetMapping("/api/comments/{id}")
-    public ResponseEntity<CommentDTO> getCommentById(@PathVariable String id) {
+    @GetMapping("/comments/{id}")
+    public ResponseEntity<CommentDTO> getCommentById(
+            @PathVariable @NotBlank(message = "El ID del comentario no puede estar vacío") String id) {
+        validateCommentExists(id);
         return ResponseEntity.ok(commentService.getCommentById(id));
     }
 
     /**
      * Actualiza un comentario existente
      */
-    @PutMapping("/api/comments/{id}")
+    @PutMapping("/comments/{id}")
     public ResponseEntity<CommentModificationResponseDTO> updateComment(
-            @PathVariable String id,
+            @PathVariable @NotBlank(message = "El ID del comentario no puede estar vacío") String id,
             @Valid @RequestBody CommentModificationRequestDTO commentDTO) {
+        validateCommentExists(id);
+        validateUserCanModifyComment(id);
         return ResponseEntity.ok(commentService.updateComment(id, commentDTO));
     }
 
     /**
-     * Eliminación suave de un comentario (marcarlo como eliminado)
+     * Eliminación suave de un comentario
      */
-    @PutMapping("/api/comments/{id}/soft-delete")
-    public ResponseEntity<CommentDTO> softDeleteComment(@PathVariable String id) {
+    @PutMapping("/comments/{id}/soft-delete")
+    public ResponseEntity<CommentDTO> softDeleteComment(
+            @PathVariable @NotBlank(message = "El ID del comentario no puede estar vacío") String id) {
+        validateCommentExists(id);
+        validateUserCanModifyComment(id);
         return ResponseEntity.ok(commentService.softDeleteComment(id));
     }
 
     /**
      * Elimina un comentario permanentemente
      */
-    @DeleteMapping("/api/comments/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable String id) {
+    @DeleteMapping("/comments/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    public ResponseEntity<Void> deleteComment(
+            @PathVariable @NotBlank(message = "El ID del comentario no puede estar vacío") String id) {
+        validateCommentExists(id);
         commentService.deleteComment(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Métodos de validación
+
+    private void validateReportExists(String reportId) {
+        // Implementar lógica para verificar si el reporte existe
+        // Si no existe, lanzar ReportNotFoundException
+    }
+
+    private void validateUserExists(String userId) {
+        // Implementar lógica para verificar si el usuario existe
+        // Si no existe, lanzar UserNotFoundException
+    }
+
+    private void validateCommentExists(String commentId) {
+        try {
+            commentService.getCommentById(commentId);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Comentario no encontrado con ID: " + commentId);
+        }
+    }
+
+    private void validateUserCanCommentOnReport(String userId, String reportId) {
+        // Implementar lógica para verificar si un usuario puede comentar en un reporte
+        // Ejemplo: verificar si el usuario está activo, si tiene permisos, etc.
+    }
+
+    private void validateUserCanModifyComment(String commentId) {
+        // Implementar lógica para verificar si el usuario actual puede modificar este comentario
+        // Por ejemplo, verificar si es el autor o tiene rol de administrador
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // String currentUsername = auth.getName();
+        // CommentDTO comment = commentService.getCommentById(commentId);
+        // if (!comment.userId().equals(currentUsername) && !auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMINISTRATOR"))) {
+        //    throw new AccessDeniedException("No tienes permiso para modificar este comentario");
+        // }
     }
 }
