@@ -3,9 +3,11 @@ package co.edu.uniquindio.CommuSafe.modules.user.service;
 import co.edu.uniquindio.CommuSafe.modules.user.dto.UserCreationRequest;
 import co.edu.uniquindio.CommuSafe.modules.user.dto.UserCreationResponse;
 import co.edu.uniquindio.CommuSafe.modules.user.dto.UserModificationRequest;
-import co.edu.uniquindio.CommuSafe.modules.user.dto.UserModificationResponse;
+import co.edu.uniquindio.CommuSafe.modules.user.dto.UserResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
-    public UserCreationResponse create(UserCreationRequest userCreationRequest);
-    public UserModificationResponse update(UserModificationRequest userModificationRequest);
+    UserCreationResponse create(UserCreationRequest userCreationRequest);
+    UserResponse update(UserModificationRequest userModificationRequest);
+    UserResponse uploadUserProfileImage(MultipartFile file, String userId);
 }

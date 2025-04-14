@@ -1,12 +1,13 @@
 package co.edu.uniquindio.CommuSafe.modules.user.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Data
 @AllArgsConstructor
-public class UserModificationResponse {
+public class UserResponse {
     private String status;
     private String message;
 }
