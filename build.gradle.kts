@@ -46,6 +46,9 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     implementation("com.cloudinary:cloudinary-http45:1.39.0")
+    implementation("org.simplejavamail:simple-java-mail:8.12.5")
+    implementation("org.simplejavamail:batch-module:8.12.5")
+
 }
 
 
