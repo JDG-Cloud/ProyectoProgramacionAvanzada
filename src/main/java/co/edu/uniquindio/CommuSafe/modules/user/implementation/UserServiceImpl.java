@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
             newUser.setAddress(userCreationRequest.getAddress());
             newUser.setPhone(userCreationRequest.getPhone());
             newUser.setRole(userCreationRequest.getRole());
+            newUser.setStatus(userCreationRequest.getStatus());
 
             if (userCreationRequest.getPassword() != null && !userCreationRequest.getPassword().isEmpty()) {
                 newUser.setPassword(passwordEncoder.encode(userCreationRequest.getPassword()));
@@ -127,6 +128,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse delete(UserModificationRequest userModificationRequest) {
+        try {
+            if (userModificationRequest == null || userModificationRequest.getEmail() == null) {
+                throw new CustomException(HttpStatus.BAD_REQUEST, "invalid request");
+            }
+
+            // Buscar usuario por email
+            Query query = new Query(Criteria.where("email").is(userModificationRequest.getEmail()));
+            boolean exists = mongoTemplate.exists(query, User.class);
+
+            if (!exists) {
+                throw new CustomException(HttpStatus.NOT_FOUND, "user not exists");
+            }
+
+            // Eliminar usuario
+            mongoTemplate.remove(query, User.class);
+
+            return new UserResponse("OK", "user deleted successfully");
+
+        } catch (DataAccessException e1) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, String.format("database error %s", e1.getMessage()));
+        } catch (CustomException e2) {
+            throw new CustomException(e2.getStatus(), e2.getMessage());
+        } catch (Exception e3) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, String.format("an unexpected error occurred: %s", e3.getMessage()));
+        }
+    }
+
+    @Override
     public UserResponse uploadUserProfileImage(MultipartFile file, String userId) {
         try {
             if (file.isEmpty()) {
@@ -181,4 +211,30 @@ public class UserServiceImpl implements UserService {
                 User.class
         );
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+        try {
+            if (email == null || email.isEmpty()) {
+                throw new CustomException(HttpStatus.BAD_REQUEST, "email is required");
+            }
+
+            Query query = new Query(Criteria.where("email").is(email));
+            User user = mongoTemplate.findOne(query, User.class);
+
+            if (user == null) {
+                throw new CustomException(HttpStatus.NOT_FOUND, "user not found");
+            }
+
+            return user;
+
+        } catch (DataAccessException e1) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, String.format("database error %s", e1.getMessage()));
+        } catch (CustomException e2) {
+            throw new CustomException(e2.getStatus(), e2.getMessage());
+        } catch (Exception e3) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, String.format("an unexpected error occurred: %s", e3.getMessage()));
+        }
+    }
+
 }
