@@ -1,7 +1,6 @@
 package co.edu.uniquindio.CommuSafe.modules.user.model;
 
 import co.edu.uniquindio.CommuSafe.modules.security.model.Otp;
-import co.edu.uniquindio.CommuSafe.modules.security.model.Role;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,7 +32,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.getTitle()));
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

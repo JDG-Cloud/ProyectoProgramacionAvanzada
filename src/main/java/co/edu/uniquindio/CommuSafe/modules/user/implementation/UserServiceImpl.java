@@ -1,13 +1,19 @@
 package co.edu.uniquindio.CommuSafe.modules.user.implementation;
 
 import co.edu.uniquindio.CommuSafe.CloudinaryConfig;
+import co.edu.uniquindio.CommuSafe.modules.Email.ActivationDTO;
+import co.edu.uniquindio.CommuSafe.modules.Email.EmailDTO;
+import co.edu.uniquindio.CommuSafe.modules.security.model.Otp;
 import co.edu.uniquindio.CommuSafe.modules.security.security.JwtService;
 import co.edu.uniquindio.CommuSafe.exceptions.CustomException;
 import co.edu.uniquindio.CommuSafe.modules.user.dto.UserModificationRequest;
 import co.edu.uniquindio.CommuSafe.modules.user.dto.UserResponse;
 import co.edu.uniquindio.CommuSafe.modules.user.dto.UserCreationRequest;
 import co.edu.uniquindio.CommuSafe.modules.user.dto.UserCreationResponse;
+import co.edu.uniquindio.CommuSafe.modules.user.model.Role;
+import co.edu.uniquindio.CommuSafe.modules.user.model.Status;
 import co.edu.uniquindio.CommuSafe.modules.user.service.UserService;
+import co.edu.uniquindio.CommuSafe.modules.util.EmailServicio;
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -23,7 +29,9 @@ import co.edu.uniquindio.CommuSafe.modules.user.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -37,6 +45,8 @@ public class UserServiceImpl implements UserService {
     private JwtService jwtUtil;
     @Autowired
     private CloudinaryConfig cloudinary;
+    @Autowired
+    private EmailServicio emailServicio;
 
     @Override
     public UserCreationResponse create(UserCreationRequest userCreationRequest) {
@@ -60,15 +70,29 @@ public class UserServiceImpl implements UserService {
             newUser.setEmail(userCreationRequest.getEmail());
             newUser.setAddress(userCreationRequest.getAddress());
             newUser.setPhone(userCreationRequest.getPhone());
-            newUser.setRole(userCreationRequest.getRole());
-            newUser.setStatus(userCreationRequest.getStatus());
+            newUser.setRole(Role.CLIENT);
+            newUser.setStatus(Status.NoActive);
 
             if (userCreationRequest.getPassword() != null && !userCreationRequest.getPassword().isEmpty()) {
                 newUser.setPassword(passwordEncoder.encode(userCreationRequest.getPassword()));
             }
 
+            String code = generarCodigo();
+            newUser.setOtps( List.of(
+                    new Otp(
+                        code,
+                        new Date()
+                    )
+            ) );
+
             // Insertar el usuario en la base de datos
             mongoTemplate.insert(newUser);
+
+            emailServicio.enviarCorreo(new EmailDTO(
+                    "Se ha registrado en la página de CommuSafe",
+                    "Su código de validación para activar la cuenta es: "+code,
+                    userCreationRequest.getEmail()
+            ));
 
             String token = jwtUtil.generateToken(newUser);
             if (token != null && !token.isEmpty()) {
@@ -81,6 +105,53 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(e2.getStatus(), e2.getMessage());
         } catch (Exception e3) {
             throw new CustomException(HttpStatus.BAD_REQUEST, String.format("an unexpected error occurred: %s", e3.getMessage()));
+        }
+    }
+
+    public String generarCodigo(){
+        int random = (int) (Math.random() * 100000);
+        return String.valueOf(random);
+    }
+
+
+    public void activate(ActivationDTO request) {
+        try {
+            if (request == null || request.email() == null || request.code() == null) {
+                throw new CustomException(HttpStatus.BAD_REQUEST, "Invalid activation request");
+            }
+
+            Query query = new Query(Criteria.where("email").is(request.email()));
+            User user = mongoTemplate.findOne(query, User.class);
+
+            if (user == null) {
+                throw new CustomException(HttpStatus.NOT_FOUND, "User not found");
+            }
+
+            Otp storedOtp = user.getOtps() != null && !user.getOtps().isEmpty()
+                    ? user.getOtps().get(user.getOtps().size() - 1)
+                    : null;
+
+            if (storedOtp == null || !storedOtp.getCode().equals(request.code())) {
+                throw new CustomException(HttpStatus.BAD_REQUEST, "Invalid or expired code");
+            }
+
+            //se valida que la duracion es de 15 minutos antes de expirar
+            long otpValidityDuration = 15 * 60 ;
+            Date currentTime = new Date();
+            Date otpCreationTime = storedOtp.getCreatedAt();
+
+            if (otpCreationTime == null ||
+                    (currentTime.getTime() - otpCreationTime.getTime()) > otpValidityDuration) {
+                throw new CustomException(HttpStatus.BAD_REQUEST, "OTP has expired");
+            }
+
+            Update update = new Update().set("status", Status.Active);
+            mongoTemplate.updateFirst(query, update, User.class);
+
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "Activation failed: " + e.getMessage());
         }
     }
 
