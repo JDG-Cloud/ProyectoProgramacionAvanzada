@@ -7,6 +7,7 @@ import co.edu.uniquindio.CommuSafe.modules.user.dto.UserResponse;
 import co.edu.uniquindio.CommuSafe.modules.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,11 +29,23 @@ public class UserController {
         return ResponseEntity.ok(userModificationResponse);
     }
 
+    @DeleteMapping("/user")
+    public ResponseEntity<UserResponse> deleteUser(@RequestBody UserModificationRequest request) {
+        UserResponse response = userService.delete(request);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("profile_image")
     public ResponseEntity<UserResponse> uploadUserProfileImage(
             @RequestParam("image") MultipartFile file,
             @RequestParam("userId") String userId) {
         var userResponse = userService.uploadUserProfileImage(file,userId);
         return ResponseEntity.ok(userResponse);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<User> getUser(@RequestParam String email) {
+        User user = userService.getUserByEmail(email);
+        return ResponseEntity.ok(user);
     }
 }
